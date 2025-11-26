@@ -9,10 +9,9 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// E_Dokan_Admin
-// b7aNLLZyjvr4e6Ad
+
 const uri =
-  "mongodb+srv://E_Dokan_Admin:b7aNLLZyjvr4e6Ad@cluster0.fcwgrle.mongodb.net/?appName=Cluster0";
+  `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.fcwgrle.mongodb.net/?appName=Cluster0`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -42,15 +41,8 @@ async function run() {
       if (email) {
         query["postedBy.email"] = email;
       }
-
-      let sortOption = {};
-      if (sort === "price-asc") sortOption.price = 1;
-      if (sort === "price-desc") sortOption.price = -1;
-      if (sort === "date-desc") sortOption.postedDate = -1;
-      if (sort === "date-asc") sortOption.postedDate = 1;
       const result = await productCollection
         .find(query)
-        .sort(sortOption)
         .toArray();
       res.send(result);
     });
